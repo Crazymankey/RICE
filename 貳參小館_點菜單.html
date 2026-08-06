@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>貳參小館｜點菜單</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red: #c17169;
+    --red-deep: #a4544c;
+    --cream: #faf4e9;
+    --cream-2: #f7efe0;
+    --ink: #4a3d30;
+    --ink-strong: #3a2f24;
+    --gold: #cda05c;
+    --jade: #7c9a6c;
+    --paper-shadow: rgba(74,61,48,.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--cream);
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(193,113,105,.05), transparent 40%),
+      radial-gradient(circle at 92% 92%, rgba(124,154,108,.05), transparent 42%);
+    font-family:'Noto Sans TC', sans-serif;
+    color: var(--ink-strong);
+  }
+  .page{
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 14px 18px 18px;
+  }
+
+  /* ---------- HEADER STRIP ---------- */
+  .hero{
+    position:relative;
+    background: linear-gradient(120deg, #d9958d 0%, var(--red) 55%, var(--red-deep) 100%);
+    color: var(--cream);
+    border-radius: 10px;
+    padding: 15px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap: wrap;
+    gap: 8px 22px;
+    box-shadow: 0 6px 16px var(--paper-shadow);
+    border-bottom: 4px solid var(--gold);
+    margin-bottom: 12px;
+  }
+  .hero-left{ display:flex; align-items:center; gap:14px; }
+  .seal{
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+    transform: rotate(-8deg);
+    position:relative;
+  }
+  .seal::after{
+    content:"";
+    position:absolute; inset:4px;
+    border-radius:50%;
+    border: 1px dashed rgba(250,244,233,.6);
+  }
+  .seal-num{ font-family:'Zilla Slab', serif; font-weight:700; font-size:18px; }
+  .hero h1{
+    font-family:'Noto Serif TC', serif;
+    font-weight:900;
+    font-size: 28px;
+    margin: 0;
+    letter-spacing:.1em;
+    line-height:1;
+  }
+  .hero .sub{
+    font-size: 10.5px;
+    letter-spacing:.22em;
+    opacity:.9;
+    margin: 3px 0 0;
+  }
+  .hero-right{ display:flex; align-items:center; gap: 16px; flex-wrap:wrap; }
+  .meta-row{ display:flex; gap:8px; flex-wrap:wrap; font-size:11px; }
+  .meta-chip{
+    background: rgba(255,255,255,.14);
+    border: 1px solid rgba(250,244,233,.35);
+    border-radius: 6px;
+    padding: 5px 10px;
+    line-height:1.5;
+    white-space:nowrap;
+  }
+  .meta-chip b{ display:block; color: var(--gold); font-size:9px; letter-spacing:.12em; }
+
+  .order-for{
+    background: rgba(255,255,255,.16);
+    border: 1px dashed rgba(250,244,233,.6);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    white-space:nowrap;
+  }
+  .order-for .line{
+    display:inline-block;
+    min-width: 70px;
+    border-bottom: 1px solid rgba(250,244,233,.8);
+    margin-left: 4px;
+  }
+
+  /* ---------- BOARD ---------- */
+  .board{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  .card{
+    background: #fffdf8;
+    border: 1px solid #ecdfc9;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px var(--paper-shadow);
+    padding: 9px 11px 6px;
+  }
+  .card h2{
+    font-family:'Noto Serif TC', serif;
+    font-weight:900;
+    font-size: 12.5px;
+    color: var(--cream);
+    background: var(--red-deep);
+    display:inline-block;
+    padding: 3px 9px;
+    border-radius: 4px;
+    margin: 0 0 6px;
+    letter-spacing:.06em;
+  }
+  .card h2 .note{
+    font-family:'Noto Sans TC', sans-serif;
+    font-size: 8px;
+    font-weight:500;
+    color: #f3dcc4;
+    display:block;
+    letter-spacing:.02em;
+  }
+  .stack{ display:flex; flex-direction:column; gap:8px; }
+
+  .dishes{ list-style:none; margin:0; padding:0; }
+  .dishes li{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 6px;
+    padding: 3px 0;
+    border-bottom: 1px dotted #e4d5b9;
+    font-size: 12px;
+  }
+  .dishes li:last-child{ border-bottom:none; }
+  .name{ display:flex; align-items:center; gap:4px; font-weight:500; flex:1; min-width:0; }
+  .name .spice{ font-size:9.5px; }
+  .name .small-note{ font-size:9px; color:#8a7a63; font-weight:400; }
+
+  .right-group{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .price{
+    font-family:'Zilla Slab', serif;
+    font-weight:700;
+    font-size: 13px;
+    color: var(--red-deep);
+    white-space:nowrap;
+  }
+  .price::before{ content:"$"; font-size:8.5px; color: var(--gold); margin-right:1px; font-weight:700; }
+
+  .pick{
+    appearance:none;
+    -webkit-appearance:none;
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--red-deep);
+    border-radius: 3px;
+    background: #fff;
+    flex-shrink:0;
+    cursor:pointer;
+    position:relative;
+  }
+  .pick:checked{ background: var(--red-deep); }
+  .pick:checked::after{
+    content:"✓";
+    position:absolute;
+    top:-3px; left:1.5px;
+    font-size: 11px;
+    color: #fff;
+    font-weight:700;
+  }
+
+  .side-item{
+    background: rgba(124,154,108,.09);
+    border: 1px dashed var(--jade);
+    border-radius:5px;
+    padding: 5px 8px;
+    margin-top:2px;
+    font-size:11.5px;
+    display:flex; justify-content:space-between; align-items:center;
+    gap:6px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  .foot{
+    margin-top: 10px;
+    display:flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items:stretch;
+  }
+  .promo{
+    flex: 2 1 420px;
+    background: #efe4d0;
+    color: var(--ink-strong);
+    border-radius: 8px;
+    padding: 8px 16px;
+    display:flex;
+    flex-wrap:wrap;
+    gap: 3px 20px;
+    font-size: 11px;
+    align-items:center;
+  }
+  .promo div{ display:flex; gap:5px; align-items:baseline; }
+  .promo span.mark{ color: var(--red-deep); font-weight:700; }
+
+  .ticket{
+    flex: 1 1 260px;
+    background: #fffdf8;
+    border: 1px solid #ecdfc9;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px var(--paper-shadow);
+    padding: 8px 18px;
+    text-align:center;
+    font-size:11.5px;
+  }
+  .ticket .hrs{
+    font-family:'Zilla Slab', serif;
+    font-size: 13px;
+    font-weight:700;
+    color: var(--red-deep);
+  }
+  .ticket .closed{ font-size:10px; color:#8a7a63; margin: 1px 0 3px; }
+  .ticket .contact{ font-size:11px; line-height:1.5; }
+  .ticket .contact b{ color: var(--red-deep); }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1100px){
+    .board{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 700px){
+    .board{ grid-template-columns: repeat(2, 1fr); }
+    .hero{ flex-direction:column; align-items:flex-start; }
+  }
+  @media (max-width: 460px){
+    .board{ grid-template-columns: 1fr; }
+  }
+
+  /* ---------- PRINT: force one A4 landscape page ---------- */
+  @page{ size: A4 landscape; margin: 7mm; }
+  @media print{
+    body{ background: var(--cream) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page{ padding: 0; }
+    .board{ grid-template-columns: repeat(5, 1fr); }
+    .pick{ border-color: var(--ink-strong); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="hero-left">
+      <div class="seal"><span class="seal-num">23</span></div>
+      <div>
+        <h1>貳參小館</h1>
+        <p class="sub">嘉義道地台式家常味・現點現炒</p>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="order-for">桌號<span class="line"></span>　人數<span class="line"></span></div>
+      <div class="meta-row">
+        <div class="meta-chip"><b>訂購專線</b>05-230 5852</div>
+        <div class="meta-chip"><b>地址</b>嘉義市東區軍輝路23號</div>
+        <div class="meta-chip"><b>營業</b>週一～六 10:30–13:30／16:30–20:00</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="board">
+
+    <section class="card">
+      <h2>台式炒飯<span class="note">全品項可加大</span></h2>
+      <ul class="dishes">
+        <li><span class="name">黃金蛋炒飯</span><span class="right-group"><span class="price">55</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">肉絲蛋炒飯</span><span class="right-group"><span class="price">75</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">鮭魚蛋炒飯</span><span class="right-group"><span class="price">85</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">蝦仁蛋炒飯</span><span class="right-group"><span class="price">90</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">牛肉蛋炒飯</span><span class="right-group"><span class="price">95</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">黃金豬排蛋炒飯</span><span class="right-group"><span class="price">90</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酥香蝦排炒飯</span><span class="right-group"><span class="price">90</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">卡拉雞腿蛋炒飯</span><span class="right-group"><span class="price">100</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酥炸唐揚雞蛋炒飯</span><span class="right-group"><span class="price">120</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">鐵路豬排蛋炒飯</span><span class="right-group"><span class="price">120</span><input type="checkbox" class="pick"></span></li>
+      </ul>
+    </section>
+
+    <section class="stack">
+      <div class="card">
+        <h2>港式炒飯<span class="note">全品項可加大</span></h2>
+        <ul class="dishes">
+          <li><span class="name">海鮮魚子炒飯</span><span class="right-group"><span class="price">120</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">港式臘味炒飯</span><span class="right-group"><span class="price">130</span><input type="checkbox" class="pick"></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>田園時蔬・豆腐</h2>
+        <ul class="dishes">
+          <li><span class="name">季節炒時蔬</span><span class="right-group"><span class="price">80</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">川味麻婆豆腐 <span class="spice">🌶️</span></span><span class="right-group"><span class="price">110</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">三鮮豆腐煲</span><span class="right-group"><span class="price">170</span><input type="checkbox" class="pick"></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>蛋類</h2>
+        <ul class="dishes">
+          <li><span class="name">香蔥烘蛋</span><span class="right-group"><span class="price">70</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">九層塔烘蛋</span><span class="right-group"><span class="price">80</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">蝦仁烘蛋</span><span class="right-group"><span class="price">130</span><input type="checkbox" class="pick"></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="card">
+        <h2>炒麵・河粉</h2>
+        <ul class="dishes">
+          <li><span class="name">什錦炒麵</span><span class="right-group"><span class="price">95</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">日式炒烏龍（豬）</span><span class="right-group"><span class="price">110</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">日式炒烏龍（牛）</span><span class="right-group"><span class="price">120</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">乾炒豬河粉</span><span class="right-group"><span class="price">130</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">乾炒牛河粉</span><span class="right-group"><span class="price">150</span><input type="checkbox" class="pick"></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>湯麵</h2>
+        <ul class="dishes">
+          <li><span class="name">什錦海鮮湯麵</span><span class="right-group"><span class="price">100</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">什錦海鮮烏龍麵</span><span class="right-group"><span class="price">120</span><input type="checkbox" class="pick"></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>飯類</h2>
+        <ul class="dishes">
+          <li><span class="name">肉燥飯（大）</span><span class="right-group"><span class="price">60</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">肉燥飯（小）</span><span class="right-group"><span class="price">40</span><input type="checkbox" class="pick"></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="stack">
+      <div class="card">
+        <h2>湯品</h2>
+        <ul class="dishes">
+          <li><span class="name">青菜蛋花湯</span><span class="right-group"><span class="price">25</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">紫菜蛋花湯</span><span class="right-group"><span class="price">30</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">貢丸湯</span><span class="right-group"><span class="price">30</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">魚丸湯</span><span class="right-group"><span class="price">30</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">餛飩湯</span><span class="right-group"><span class="price">45</span><input type="checkbox" class="pick"></span></li>
+          <li><span class="name">蛤仔湯</span><span class="right-group"><span class="price">45</span><input type="checkbox" class="pick"></span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>小菜盤</h2>
+        <div class="side-item"><span>45元小菜－黃金泡菜</span><span class="right-group"><span class="price">45</span><input type="checkbox" class="pick"></span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>雞肉</h2>
+      <ul class="dishes">
+        <li><span class="name">蠔油醬爆雞丁</span><span class="right-group"><span class="price">140</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">川味宮保雞丁 <span class="spice">🌶️</span></span><span class="right-group"><span class="price">160</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">三杯雞丁</span><span class="right-group"><span class="price">160</span><input type="checkbox" class="pick"></span></li>
+      </ul>
+      <h2 style="margin-top:6px;">日式照燒飯</h2>
+      <ul class="dishes">
+        <li><span class="name">日式照燒豬</span><span class="right-group"><span class="price">100</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">日式照燒牛</span><span class="right-group"><span class="price">120</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">泡菜豬肉</span><span class="right-group"><span class="price">110</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">泡菜牛肉</span><span class="right-group"><span class="price">130</span><input type="checkbox" class="pick"></span></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>豬肉</h2>
+      <ul class="dishes">
+        <li><span class="name">蔥爆豬肉</span><span class="right-group"><span class="price">110</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">客家小炒</span><span class="right-group"><span class="price">130</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酥炸紅糟肉</span><span class="right-group"><span class="price">150</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">港式咕咾肉</span><span class="right-group"><span class="price">160</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">川味水煮豬 <span class="spice">🌶️</span></span><span class="right-group"><span class="price">170</span><input type="checkbox" class="pick"></span></li>
+      </ul>
+      <h2 style="margin-top:6px;">牛肉</h2>
+      <ul class="dishes">
+        <li><span class="name">空心菜炒牛肉</span><span class="right-group"><span class="price">140</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">蔥爆牛肉</span><span class="right-group"><span class="price">150</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">川味水煮牛 <span class="spice">🌶️</span></span><span class="right-group"><span class="price">180</span><input type="checkbox" class="pick"></span></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>海鮮類</h2>
+      <ul class="dishes">
+        <li><span class="name">月亮蝦餅</span><span class="right-group"><span class="price">130</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酸甜糖醋魚柳</span><span class="right-group"><span class="price">140</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">香酥避風塘魚柳</span><span class="right-group"><span class="price">160</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">宮保蝦球 <span class="spice">🌶️</span></span><span class="right-group"><span class="price">180</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">香酥避風塘蝦球</span><span class="right-group"><span class="price">180</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">塔香蛤蜊</span><span class="right-group"><span class="price">170</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">東石鮮蝦捲</span><span class="right-group"><span class="price">100</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">東石鮮蚵捲</span><span class="right-group"><span class="price">100</span><input type="checkbox" class="pick"></span></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>酥炸點心</h2>
+      <ul class="dishes">
+        <li><span class="name">奶油可樂餅</span><span class="right-group"><span class="price">20</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酥炸金黃薯條</span><span class="right-group"><span class="price">40</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酥炸雞塊 <span class="small-note">（1份6塊）</span></span><span class="right-group"><span class="price">55</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">日式唐揚雞</span><span class="right-group"><span class="price">65</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酥炸卡拉雞腿</span><span class="right-group"><span class="price">45</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">日式炸豬排</span><span class="right-group"><span class="price">50</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">炸蝦天婦羅</span><span class="right-group"><span class="price">90</span><input type="checkbox" class="pick"></span></li>
+        <li><span class="name">酥炸水餃</span><span class="right-group"><span class="price">40</span><input type="checkbox" class="pick"></span></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <div class="foot">
+    <div class="promo">
+      <div><span class="mark">★</span>外帶、內用～飯類可免費加大</div>
+      <div><span class="mark">★</span>內用～白飯、飲料免費供應</div>
+      <div><span class="mark">★</span>炒麵加麵 +10元</div>
+      <div><span class="mark">★</span>烏龍麵加麵 +25元</div>
+    </div>
+    <div class="ticket">
+      <div class="hrs">10:30–13:30　／　16:30–20:00</div>
+      <div class="closed">最後收客 19:30　｜　固定公休日：星期日</div>
+      <div class="contact"><b>訂購</b> 05-230 5852　｜　<b>地址</b> 嘉義市東區軍輝路23號</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
